@@ -8,10 +8,13 @@ from scipy import signal
 def read_expres(fname, full_output=False, as_arrays=False, as_order_dict=False, as_raw_table=False):
     if full_output:
         raise NotImplementedError("For now use as_raw_table=True")
-    tab = Table.read(fname, hdu=1)
+    tab = Table.read(fname, hdu=1, format="fits")
     if as_raw_table: return tab
     
-    orders = tab["order"]
+    try:
+        orders = tab["order"]
+    except KeyError:
+        orders = tab["orders"]
     cols = ["wavelength", "spectrum", "uncertainty", "continuum",
             "offset","offset_uncertainty","n_pixels","reduced_chi",
             "continuum_mask","pixel_mask","tellurics",
